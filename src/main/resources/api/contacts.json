@@ -1,0 +1,13 @@
+{
+	"library": "spring-mvc",
+	"dateLibrary": "legacy",
+	"useTags": "true",
+	"hideGenerationTimestamp": true,
+	"modelPackage": "com.ezetap.contacts.web.api.model",
+	"apiPackage": "com.ezetap.contacts.web.api",
+	"invokerPackage": "com.ezetap.contacts",
+	"importMappings": {
+		"Link": "org.springframework.hateoas.Link",
+		"ResourceSupport": "org.springframework.hateoas.ResourceSupport"
+	}
+}

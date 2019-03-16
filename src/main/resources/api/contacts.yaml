@@ -1,0 +1,241 @@
+swagger: '2.0'
+info:
+  description: This is a sample server Contacts server.
+  version: 1.0.0
+  title: Contacts Service
+  contact:
+    email: chandra.sarat03@gmail.com
+host: "localhost:8080"
+basePath: "/"
+tags:
+- name: Contact
+  description: Basic API's for Contacts
+schemes:
+- http
+paths:
+  /web/v1/contacts:
+    post:
+      tags:
+      - Contacts
+      summary: Add a new Contact to the Contact Book
+      description: Adds a new Contact
+      operationId: addContacts
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/xml
+      - application/json
+      parameters:
+      - in: body
+        name: ContactModel
+        description: Request Body that contains data required for creating new Contact
+        required: true
+        schema:
+          $ref: "#/definitions/ContactModel"
+      responses:
+        201:
+          description: Returns the Id of the newly Created Contact
+          headers:
+            Location:
+              description: URL of the newly created Contact
+              type: string
+          schema:
+            $ref: '#/definitions/ResponseModel'
+        405:
+          description: "Invalid input"
+        401: 
+          description: Request does not have sufficient credentials
+        500:
+          description: Internal Error
+    get:
+      tags:
+      - Contacts
+      summary: Get All contacts
+      description: Get All contacts
+      operationId: getContacts
+      produces:
+      - application/xml
+      - application/json
+      parameters:
+      - in: query
+        name: name
+        type: string
+        description: "Query based on name"
+        required: false
+      - in: query
+        name: email
+        type: string
+        description: "Query based on Email"
+        required: false
+      - in: query
+        name: offset
+        type: integer
+        description: "Query based on offset"
+        required: false
+      - in: query
+        name: limit
+        type: integer
+        description: "Query based on limit"
+        required: false
+      responses:
+        200:
+          description: Succesfully perfomed the operation
+          schema:
+            $ref: '#/definitions/ContactCollectionModel'
+        204:
+          description: "Contact not found"
+  /web/v1/contacts/{id}:
+    put:
+      tags:
+      - Contacts
+      summary: "Finds contacts by id"
+      description: "Find Contacts by id"
+      operationId: updateContact
+      consumes:
+      - application/xml
+      - application/json
+      produces:
+      - application/xml
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        type: string
+        description: Id of the Contact that needs to be updated
+        required: true
+      - name: ContactModel
+        in: body
+        description: Request body that contains Contact Model that needs to be updated
+        required : true
+        schema:
+          $ref: '#/definitions/ContactModel'
+      responses:
+        200:
+          description: Contact updated successfully
+          schema:
+            $ref: "#/definitions/ResponseModel"
+        400:
+          description: Bad Request
+    delete:
+      tags:
+      - Contacts
+      summary: Deletes the Contact
+      description: Deletes the contact
+      operationId: deleteContact
+      consumes:
+      - application/xml
+      - application/json
+      produces:
+      - application/xml
+      - application/json
+      parameters:
+      - name: id
+        type: string
+        in: path
+        description: Id of the Contact that needs to be updated
+        required: true
+      - name: ContactModel
+        in: body
+        description: Request body that contains Contact Model that needs to be updated
+        required : true
+        schema:
+          $ref: '#/definitions/ContactModel'
+      responses:
+        200:
+          description: Contact updated successfully
+          schema:
+            $ref: "#/definitions/ResponseModel"
+        400:
+          description: Bad Request
+definitions:
+  ContactModel:
+   type: "object"
+   allOf:
+   - $ref: '#/definitions/ResourceSupport'
+   - type: object
+     required:
+     - email
+     properties:
+      keyId:
+        description: Surrogate Key Id of the Contact
+        type: string
+        minLength: 36
+        maxLength: 36
+      name:
+        type: string
+        description: Name of the Contact
+        maxLength: 20
+      designation:
+        type: string
+        description: Designation of the Contact
+        maxLength: 20
+      addressType:
+        type: string
+        description: Address Type
+        maxLength: 20
+      addressLine1:
+        type: string
+        description: Address Line 1
+        maxLength: 105
+      addressLine2:
+        type: string
+        description: Address Line 2
+        maxLength: 105
+      city:
+        type: string
+        description: City
+        maxLength: 50
+      state:
+        type: string
+        description: State
+        maxLength: 50
+      country:
+        type: string
+        description: Country
+        maxLength: 50
+      zipcode:
+        type: string
+        description: zipcode
+        maxLength: 8
+      email:
+        type: string
+        description: Email
+      telephone:
+        type: string
+        description: Telephone
+        maxLength: 16
+  ContactCollectionModel:
+    type: "object"
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ContactModel'
+      paging:
+        $ref: "#/definitions/PagingDto"
+  PagingDto:
+   type: object
+   properties:
+    totalResults:
+     type: integer
+    links:
+     $ref: '#/definitions/Links'
+  Links:
+   type: object
+   properties:
+    next: 
+     $ref: '#/definitions/Link'
+    prev: 
+     $ref: '#/definitions/Link'
+  ResponseModel:
+   type: object
+   properties:
+    message:
+     type: string
+    data:
+     $ref: "#/definitions/ResourceSupport"  
+  ResourceSupport:
+   allOf:
+    - type: object
+      discriminator: resource_type
