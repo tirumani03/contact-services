@@ -1,7 +1,7 @@
 # contact-services
 Basic CRUD API's for contacts developed with Spring Boot
 
-    1. Services is developed as a fat jar. once started will use tomcat embedded and runs at  **http://localhost:8080**
+    1. Service is developed as a fat jar. once started will use tomcat embedded and runs at  **http://localhost:8080**
     2. Database used is H2. In memory database. H2 console can be seen at **http://localhost:8080/h2console**
     3. DB details: 
             jdbc url: jdbc:h2:mem:contactdb
